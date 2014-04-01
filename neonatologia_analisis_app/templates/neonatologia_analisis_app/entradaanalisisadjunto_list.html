@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+{% block extra_css %}
+<style>
+  #create_form {padding-top: 15px;}
+</style>
+{% endblock extra_css %}
+{% block page_title %}
+{% if title %}
+<h2>{{title}}</h2>
+<h3>Ficha {{parent_obj.id}} - {{parent_obj.fecha_format}} - {{parent_obj.ape_nom}}</h3>
+{% endif %}
+{% endblock page_title %}
+{% block content %}
+
+{% if error %}
+<div class="alert {{ error.class }}">
+  <strong>{{ error.title }}</strong> - {{ error.text }}
+</div>
+{% endif %}
+
+<div id="create_form" class="row">
+  {% if perms.neonatologia_analisis_app.create_entrada_analisis_adjunto %}
+  {% crispy form %}
+  {% endif %}
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-hover text-left">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Tamaño</th>
+        <th>Fecha</th>
+        <th>Creador</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ea_adjunto in object_list %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ea_adjunto.filename}}</td>
+        <td>{{ea_adjunto.get_file_size|filesizeformat}}</td>
+        <td>{{ea_adjunto.created|date:"d/m/Y"}}</td>
+        <td>{{ea_adjunto.created_user}}</td>
+        <td>
+          <div class="btn-group">
+            <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
+             <span class="glyphicon glyphicon-cog"></span> Acciones <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="{% url 'entradaanalisisadjunto_download' ea_adjunto.id %}"><span class="glyphicon glyphicon-cloud-download"></span> Descargar</a></li>
+              {% if perms.neonatologia_analisis_app.delete_entrada_analisis_adjunto %}
+              <li><a href="{% url 'entradaanalisisadjunto_delete' ea_adjunto.id %}"><span class="glyphicon glyphicon-remove"></span> Eliminar</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock content %}
+
+{% block extra_js %}
+{% endblock extra_js %}

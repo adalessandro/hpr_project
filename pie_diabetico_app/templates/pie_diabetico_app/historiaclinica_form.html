@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<link href="{% static 'datepicker/css/datepicker.css' %}" rel="stylesheet">
+{% endblock extra_css %}
+
+{% block page_title %}
+{% if title %}
+<h1>{{title}}</h1>
+{% endif %}
+{% endblock page_title %}
+
+{% block content %}
+<div style="padding-top: 20px;">
+  {% crispy form %}
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'datepicker/js/bootstrap-datepicker.js' %}"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#id_fecha').datepicker({ format: "dd/mm/yyyy" });
+  });
+</script>
+<script type="text/javascript">
+  window.onload=function() {
+    $('#id_fecha').focus();
+    $('#id_fecha').datepicker('hide');
+  }
+</script>
+{% endblock extra_js %}

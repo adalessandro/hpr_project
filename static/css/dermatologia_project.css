@@ -1,0 +1,161 @@
+/*! project specific CSS goes here. */
+body {
+  padding-top: 30px;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+
+/*! table warning-dark like buttons */
+.table > thead > tr > td.warning-dark,
+.table > tbody > tr > td.warning-dark,
+.table > tfoot > tr > td.warning-dark,
+.table > thead > tr > th.warning-dark,
+.table > tbody > tr > th.warning-dark,
+.table > tfoot > tr > th.warning-dark,
+.table > thead > tr.warning-dark > td,
+.table > tbody > tr.warning-dark > td,
+.table > tfoot > tr.warning-dark > td,
+.table > thead > tr.warning-dark > th,
+.table > tbody > tr.warning-dark > th,
+.table > tfoot > tr.warning-dark > th {
+  background-color: #F8EDB5;
+}
+.table-hover > tbody > tr > td.warning-dark:hover,
+.table-hover > tbody > tr > th.warning-dark:hover,
+.table-hover > tbody > tr.warning-dark:hover > td,
+.table-hover > tbody > tr.warning-dark:hover > th {
+  background-color: #F4E186;
+}
+
+/*! table info-dark like buttons */
+.table > thead > tr > td.info-dark,
+.table > tbody > tr > td.info-dark,
+.table > tfoot > tr > td.info-dark,
+.table > thead > tr > th.info-dark,
+.table > tbody > tr > th.info-dark,
+.table > tfoot > tr > th.info-dark,
+.table > thead > tr.info-dark > td,
+.table > tbody > tr.info-dark > td,
+.table > tfoot > tr.info-dark > td,
+.table > thead > tr.info-dark > th,
+.table > tbody > tr.info-dark > th,
+.table > tfoot > tr.info-dark > th {
+  background-color: #C4E3F3;
+}
+.table-hover > tbody > tr > td.info-dark:hover,
+.table-hover > tbody > tr > th.info-dark:hover,
+.table-hover > tbody > tr.info-dark:hover > td,
+.table-hover > tbody > tr.info-dark:hover > th {
+  background-color: #99CEEB;
+}
+
+/*! table success-dark like buttons */
+.table > thead > tr > td.success-dark,
+.table > tbody > tr > td.success-dark,
+.table > tfoot > tr > td.success-dark,
+.table > thead > tr > th.success-dark,
+.table > tbody > tr > th.success-dark,
+.table > tfoot > tr > th.success-dark,
+.table > thead > tr.success-dark > td,
+.table > tbody > tr.success-dark > td,
+.table > tfoot > tr.success-dark > td,
+.table > thead > tr.success-dark > th,
+.table > tbody > tr.success-dark > th,
+.table > tfoot > tr.success-dark > th {
+  background-color: #BFE1B2;
+}
+.table-hover > tbody > tr > td.success-dark:hover,
+.table-hover > tbody > tr > th.success-dark:hover,
+.table-hover > tbody > tr.success-dark:hover > td,
+.table-hover > tbody > tr.success-dark:hover > th {
+  background-color: #A1D38D;
+}
+
+/*! table danger-dark like buttons */
+.table > thead > tr > td.danger-dark,
+.table > tbody > tr > td.danger-dark,
+.table > tfoot > tr > td.danger-dark,
+.table > thead > tr > th.danger-dark,
+.table > tbody > tr > th.danger-dark,
+.table > tfoot > tr > th.danger-dark,
+.table > thead > tr.danger-dark > td,
+.table > tbody > tr.danger-dark > td,
+.table > tfoot > tr.danger-dark > td,
+.table > thead > tr.danger-dark > th,
+.table > tbody > tr.danger-dark > th,
+.table > tfoot > tr.danger-dark > th {
+  background-color: #E4B9B9;
+}
+.table-hover > tbody > tr > td.danger-dark:hover,
+.table-hover > tbody > tr > th.danger-dark:hover,
+.table-hover > tbody > tr.danger-dark:hover > td,
+.table-hover > tbody > tr.danger-dark:hover > th {
+  background-color: #D69595;
+}
+
+/*! table primary-dark like buttons */
+.table > thead > tr > td.primary-dark,
+.table > tbody > tr > td.primary-dark,
+.table > tfoot > tr > td.primary-dark,
+.table > thead > tr > th.primary-dark,
+.table > tbody > tr > th.primary-dark,
+.table > tfoot > tr > th.primary-dark,
+.table > thead > tr.primary-dark > td,
+.table > tbody > tr.primary-dark > td,
+.table > tfoot > tr.primary-dark > td,
+.table > thead > tr.primary-dark > th,
+.table > tbody > tr.primary-dark > th,
+.table > tfoot > tr.primary-dark > th {
+  background-color: #5898D0;
+}
+.table-hover > tbody > tr > td.primary-dark:hover,
+.table-hover > tbody > tr > th.primary-dark:hover,
+.table-hover > tbody > tr.primary-dark:hover > td,
+.table-hover > tbody > tr.primary-dark:hover > th {
+  background-color: #428BCA;
+}
+
+/*! blink icon */
+@-webkit-keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-moz-keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-o-keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.blink {
+  -webkit-animation: blink 2s;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation: blink 2s;
+  -moz-animation-iteration-count: infinite;
+  -o-animation: blink 2s;
+  -o-animation-iteration-count: infinite;
+}

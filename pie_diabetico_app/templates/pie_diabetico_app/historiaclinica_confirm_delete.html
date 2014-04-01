@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block page_title %}
+{% if title %}
+<h1>{{title}}</h1>
+{% endif %}
+{% endblock page_title %}
+{% block content %}
+<form action="" method="post">{% csrf_token %}
+    <p class="lead">¿Confirma que desea eliminar "{{ object }}"?</p>
+    <button type="submit" class="btn btn-primary">Confirmar</button>
+    <a type="button" class="btn btn-default" href={% url 'historiaclinica_list' %}>Cancelar</a>
+</form>
+{% endblock content %}

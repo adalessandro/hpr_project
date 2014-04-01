@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block page_title %}
+{% if title %}
+<h1>{{title}}</h1>
+{% endif %}
+{% endblock page_title %}
+{% block content %}
+  {{object.nombre}}
+  {{object.apellido}}
+{% endblock content %}

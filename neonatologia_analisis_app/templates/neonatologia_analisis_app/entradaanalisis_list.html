@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<link href="{% static 'datepicker/css/datepicker.css' %}" rel="stylesheet">
+{% endblock extra_css %}
+
+{% block page_title %}
+{% if title %}
+<h1>{{title}}</h1>
+<h2>{{date|date:"F Y"}}</h2>
+{% endif %}
+{% endblock page_title %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-sm-12 text-center" style="line-height: 300%;">
+    {% for btn in top_btns %}
+    <a type="button" class="btn {{btn.class}}" href="{% url btn.url btn.url_args %}"><span class="glyphicon {{btn.icon}} "></span> {{btn.text}}</a>
+    {% endfor %}
+  </div>
+</div>
+<div class="row" style="padding-top: 15px; line-height: 300%;">
+  <div class="col-xs-5 text-center">
+    {% crispy formFechaIr %}
+  </div>
+  <div class="col-xs-7 text-center">
+    {% crispy formBuscar %}
+  </div>
+</div>
+
+<div class="" style="padding-top: 20px; font-size: 13px;">
+  <table class="table table-hover text-left">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>ID</th>
+        <th></th>
+        <th>Fecha</th>
+        <th>Apellido</th>
+        <th>Nombre</th>
+        <th>Fecha nac.</th>
+        <th>Madre Ape.</th>
+        <th>Madre Nom.</th>
+        <th>Det. a rep.</th>
+        <th>Fecha 1º muestra</th>
+        <th>Notif. Trab. Soc.</th>
+        <th>Fecha notif. flia.</th>
+        <th>Fecha muestra rep.</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entrada in object_list %}
+      <tr {% if entrada.estado == 'E' %}class="danger-dark"
+          {% elif entrada.etapa == 'COM' %}class="success-dark"
+          {% elif entrada.etapa == 'INI' %}class="default"
+          {% elif entrada.etapa == 'NTS' %}class="warning-dark"
+          {% elif entrada.etapa == 'NOT' %}class="info-dark"
+          {%endif%}</tr>
+        <td>{{ forloop.counter0 | add:page_obj.start_index }}</td>
+        <td>{{entrada.id}}</td>
+        <td>{% if entrada.prioridad == 'U' and not entrada.etapa == 'COM' %}<span style="font-size: 15px;" class="glyphicon glyphicon-exclamation-sign blink"></span>{% endif %}
+          {% if entrada.is_analisis_retraso %}<span style="font-size: 15px;" class="glyphicon glyphicon-time blink"></span>{% endif %}
+        </td>
+        <td>{{entrada.fecha|date:"d/m/Y"}}</td>
+        <td>{{entrada.apellido}}</td>
+        <td>{{entrada.nombre}}</td>
+        <td>{{entrada.fecha_nacimiento|date:"d/m/Y"}}</td>
+        <td>{{entrada.apellido_madre}}</td>
+        <td>{{entrada.nombre_madre}}</td>
+        <td><a type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modal_{{entrada.id}}"><span class="glyphicon glyphicon-list"></span> Ver</a></td>
+        <!--Determinaciones modal-->
+        <div class="modal fade" id="modal_{{entrada.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h5 class="modal-title" id="myModalLabel"><strong><br>DETERMINACIONES A REPETIR</strong><br><strong>{{entrada.fecha|date:"d/m/Y"}} - {{entrada.apellido}} - {{entrada.nombre}}</strong><h5>
+              </div>
+              <div class="modal-body text-left">
+                {% for determinacion in entrada.determinaciones.all %}
+                <h5><span style="font-size: 15px;" class="glyphicon glyphicon-file"></span><strong>{{determinacion.nombre}}</strong></h5>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div> <!--/Determinaciones modal-->
+        <td>{{entrada.muestra_fecha_1|date:"d/m/Y"}}</td>
+        <td>{{entrada.notificar_trabsoc}}</td>
+        <td>{{entrada.fecha_notif_familia|date:"d/m/Y"}}</td>
+        <td>{{entrada.muestra_fecha_2|date:"d/m/Y"}}</td>
+        <td>
+          <div class="btn-group">
+            <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
+             <span class="glyphicon glyphicon-cog"></span> <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="{% url 'entradaanalisis_update' entrada.id %}"><span class="glyphicon glyphicon-pencil"></span> Ver/Modificar</a></li>
+              <li><a href="{% url 'entradaanalisis_excel' entrada.id %}"><span class="glyphicon glyphicon-arrow-down"></span> Exportar</a></li>
+              {% if perms.neonatologia_analisis_app.view_entrada_analisis_adjunto %}
+                <li><a href="{% url 'entradaanalisisadjunto_list' entrada.id %}"><span class="glyphicon glyphicon-folder-open"></span> Adjuntos</a></li>
+              {% endif %}
+              {% if entrada.estado == 'A' and perms.neonatologia_analisis_app.delete_entrada_analisis %}
+                <li><a href="{% url 'entradaanalisis_delete' entrada.id %}"><span class="glyphicon glyphicon-remove"></span> Eliminar</a></li>
+              {% endif %}
+              {% if entrada.estado == 'E' and perms.neonatologia_analisis_app.restore_entrada_analisis %}
+                <li><a href="{% url 'entradaanalisis_restore' entrada.id %}"><span class="glyphicon glyphicon-check"></span> Restaurar</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li><a href="?page={{page_obj.previous_page_number}}">&laquo;</a></li>
+    {% else %}
+    <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for pagenum in page_obj.paginator.page_range %}
+        {% if pagenum == page_obj.number %}
+        <li class="active"><span>{{ pagenum }}<span class="sr-only"></span></span></li>
+        {% else %}
+        <li><a href="?page={{pagenum}}">{{ pagenum }}</a></li>
+        {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <li><a href="?page={{page_obj.next_page_number}}">&raquo;</a></li>
+    {% else %}
+    <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+</ul>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'datepicker/js/bootstrap-datepicker.js' %}"></script>
+<script>$('#id_Todos').tooltip()
+  $('#id_Todos').tooltip('show')
+</script>
+<script>
+  function init_tipocampo() {
+    var campo = $('#id_campoBuscar').val();
+    if (campo == 'id' || campo == 'apellido' || campo == 'nombre' || campo == 'apellido_madre' || campo == 'nombre_madre') {
+      new_html = "<input class='textinput textInput form-control' id='id_stringBuscar' maxlength='254' name='stringBuscar' type='text'>";
+      $('#id_stringBuscar').replaceWith(new_html);
+      $('#id_stringBuscar').prop('value', '{{formBuscar.stringBuscar.value}}');
+    }
+    else if (campo == 'fecha' || campo == 'fecha_nacimiento' || campo == 'muestra_fecha_1' || campo == 'fecha_notif_familia' || campo == 'muestra_fecha_2') {
+      new_html = "<input class='textinput textInput form-control' id='id_stringBuscar' maxlength='254' name='stringBuscar' type='text'>";
+      $('#id_stringBuscar').replaceWith(new_html);
+      $('#id_stringBuscar').datepicker({format: "dd/mm/yyyy"});
+      $('#id_stringBuscar').prop('value', '{{formBuscar.stringBuscar.value}}');
+    }
+    else if (campo == 'notificar_trabsoc') {
+      new_html = "<select class='select form-control' id='id_stringBuscar' name='stringBuscar'> <option value='SI'>SI</option> <option value='NO'>NO</option> </select>";
+      $('#id_stringBuscar').replaceWith(new_html);
+      $('#id_stringBuscar option[value=' + '{{formBuscar.stringBuscar.value}}' + ']').prop('selected', true);
+    }
+    else if (campo == 'determinaciones') {
+      new_html = "<select class='select form-control' id='id_stringBuscar' name='stringBuscar'> {% for det_option in det_options %}<option value='{{det_option.id}}'>{{det_option.nombre}}</option> {% endfor %} </select>";
+      $('#id_stringBuscar').replaceWith(new_html);
+      $('#id_stringBuscar option[value=' + '{{formBuscar.stringBuscar.value}}' + ']').prop('selected', true);
+    }
+  };
+
+  $('#id_campoBuscar').change(function() {
+    var campo = $('#id_campoBuscar').val();
+    if (campo == 'id' || campo == 'apellido' || campo == 'nombre' || campo == 'apellido_madre' || campo == 'nombre_madre') {
+      new_html = "<input class='textinput textInput form-control' id='id_stringBuscar' maxlength='254' name='stringBuscar' type='text'>";
+      $('#id_stringBuscar').replaceWith(new_html);
+      $('#id_stringBuscar').focus();
+    }
+    else if (campo == 'fecha' || campo == 'fecha_nacimiento' || campo == 'muestra_fecha_1' || campo == 'fecha_notif_familia' || campo == 'muestra_fecha_2') {
+      new_html = "<input class='textinput textInput form-control' id='id_stringBuscar' maxlength='254' name='stringBuscar' type='text'>";
+      $('#id_stringBuscar').replaceWith(new_html);
+      $('#id_stringBuscar').datepicker({format: "dd/mm/yyyy"});
+      $('#id_stringBuscar').focus();
+      $('#id_stringBuscar').datepicker('show');
+    }
+    else if (campo == 'notificar_trabsoc') {
+      new_html = "<select class='select form-control' id='id_stringBuscar' name='stringBuscar'> <option value='SI'>SI</option> <option value='NO'>NO</option> </select>";
+      $('#id_stringBuscar').replaceWith(new_html);
+      $('#id_stringBuscar').focus();
+    }
+    else if (campo == 'determinaciones') {
+      new_html = "<select class='select form-control' id='id_stringBuscar' name='stringBuscar'> {% for det_option in det_options %}<option value='{{det_option.id}}'>{{det_option.nombre}}</option> {% endfor %} </select>";
+      $('#id_stringBuscar').replaceWith(new_html);
+      $('#id_stringBuscar').focus();
+    }
+  });
+</script>
+<script type="text/javascript">
+  window.onload=function() {
+    init_tipocampo();
+    $('#id_fechaIr').datepicker({format: "mm/yyyy", viewMode: 1, minViewMode: 1});
+  }
+</script>
+{% endblock extra_js %}

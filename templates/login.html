@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block page_title %}
+  <h1>Ingresar</h1>
+{% endblock page_title %}
+
+{% block content %}
+<div style="padding-top: 20px;">
+  {% for error in errors %}
+  <div class="alert alert-danger">
+    <strong>{{error.label}}</strong> {{error.text}}
+  </div>
+  {% endfor %}
+  {% crispy form %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    window.onload=function() {
+    $('#id_username').focus();
+}
+</script>
+{% endblock extra_js %}

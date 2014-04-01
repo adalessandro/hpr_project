@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<link href="{% static 'datepicker/css/datepicker.css' %}" rel="stylesheet">
+{% endblock extra_css %}
+
+{% block page_title %}
+{% if title %}
+<h1>{{title}}</h1>
+{% endif %}
+{% endblock page_title %}
+
+{% block content %}
+<div style="padding-top: 20px;">
+  {% crispy form %}
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'datepicker/js/bootstrap-datepicker.js' %}"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#id_fecha').datepicker({ format: "dd/mm/yyyy" });
+    $('#id_fecha_nacimiento').datepicker({ format: "dd/mm/yyyy" });
+    $('#id_muestra_fecha_1').datepicker({ format: "dd/mm/yyyy" });
+    $('#id_fecha_notif_familia').datepicker({ format: "dd/mm/yyyy" });
+    $('#id_muestra_fecha_2').datepicker({ format: "dd/mm/yyyy" });
+  });
+</script>
+<script type="text/javascript">
+  window.onload=function() {
+    $('#id_fecha').focus();
+  }
+</script>
+{% endblock extra_js %}

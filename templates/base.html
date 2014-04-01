@@ -1,0 +1,102 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Ariel D´Alessandro">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.png">
+
+    <title>{% block title %}HPR Project{% endblock title %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+
+    <!-- This file store project specific CSS -->
+    <link href="{% static 'css/dermatologia_project.css' %}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    {% block extra_css %}{% endblock extra_css %}
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'dermatologia_index' %}">HPR Project</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            {% block top_navbar %}
+            <li class="dropdown {% if active = 'pie_diabetico_index' %}active{% endif %}">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plus-sign"></span> Pie Diabético<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                {% if perms.pie_diabetico_app.view_historia_clinica %}
+                <li><a href="{% url 'historiaclinica_list' 'activos' %}"><span class="glyphicon glyphicon-list-alt"></span> Listado Fichas</a></li>
+                {% endif %}
+                {% if perms.pie_diabetico_app.create_historia_clinica %}
+                <li><a href="{% url 'historiaclinica_create' %}"><span class="glyphicon glyphicon-plus"></span> Añadir Ficha</a></li>
+                {% endif %}
+              </ul>
+            </li>
+            <li class="dropdown {% if active = 'neonatologia_analisis_index' %}active{% endif %}">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plus-sign"></span> Neonatología Análisis<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                {% if perms.neonatologia_analisis_app.view_entrada_analisis %}
+                <li><a href="{% url 'entradaanalisis_list' 'todos' %}"><span class="glyphicon glyphicon-list-alt"></span> Listado Pedidos Análisis</a></li>
+                {% endif %}
+                {% if perms.neonatologia_analisis_app.create_entrada_analisis %}
+                <li><a href="{% url 'entradaanalisis_create' %}"><span class="glyphicon glyphicon-plus"></span> Añadir Pedidos Análisis</a></li>
+                {% endif %}
+              </ul>
+            </li>
+            {% if user.is_staff %}
+            <li><a href="/admin"><span class="glyphicon glyphicon-wrench"></span> Administración</a></li>
+            {% endif %}
+            {% endblock top_navbar %}
+          </ul>
+          <ul class="nav navbar-nav pull-right">
+            {% if user.is_authenticated %}
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ request.user }} <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url 'logout_view' %}">Cerrar sesión</a></li>
+                </ul>
+            </li>
+            {% else %}
+            <li><a href="{% url 'login_view' %}">Ingresar</a></li>
+            {% endif %}
+        </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="starter-template">
+        {% block page_title %}{% endblock page_title %}
+        {% block content %}{% endblock content %}
+      </div>
+
+    </div> <!-- /container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    {% block extra_js %}{% endblock extra_js %}
+  </body>
+</html>

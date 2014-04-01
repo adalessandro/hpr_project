@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+{% block page_title %}
+{% if title %}
+<h1>{{title}}</h1>
+{% endif %}
+{% endblock page_title %}
+{% block content %}
+
+<div class="row">
+  <div class="col-sm-6">
+  <a type="button" class="btn {{btn_estado.class}}" href="{% url btn_estado.url btn_estado.url_args %}">{{btn_estado.text}}</a>
+  </div>
+  <div class="col-sm-6">
+  {% crispy form %}
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-hover text-left">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>ID</th>
+        <th>Fecha</th>
+        <th>Documento</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for historia in object_list %}
+      <tr {% if historia.estado == 'E' %}class="danger"{% endif %}>
+        <td>{{ forloop.counter0 | add:page_obj.start_index }}</td>
+        <td>{{historia.id}}</td>
+        <td>{{historia.fecha|date:"d/m/Y"}}</td>
+        <td>{{historia.doc_str}}</td>
+        <td>{{historia.nombre}}</td>
+        <td>{{historia.apellido}}</td>
+        <td>
+          <div class="btn-group">
+            <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
+             <span class="glyphicon glyphicon-cog"></span> Acciones <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="{% url 'historiaclinica_update' historia.id %}"><span class="glyphicon glyphicon-pencil"></span> Ver/Modificar</a></li>
+              <li><a href="{% url 'historiaclinica_excel' historia.id %}"><span class="glyphicon glyphicon-arrow-down"></span> Exportar</a></li>
+              {% if perms.pie_diabetico_app.view_historia_clinica_adjunto %}
+                <li><a href="{% url 'historiaclinicaadjunto_list' historia.id %}"><span class="glyphicon glyphicon-folder-open"></span> Adjuntos</a></li>
+              {% endif %}
+              {% if historia.estado == 'A' and perms.pie_diabetico_app.delete_historia_clinica %}
+                <li><a href="{% url 'historiaclinica_delete' historia.id %}"><span class="glyphicon glyphicon-remove"></span> Eliminar</a></li>
+              {% endif %}
+              {% if historia.estado == 'E' and perms.pie_diabetico_app.restore_historia_clinica %}
+                <li><a href="{% url 'historiaclinica_restore' historia.id %}"><span class="glyphicon glyphicon-check"></span> Restaurar</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li><a href="?page={{page_obj.previous_page_number}}">&laquo;</a></li>
+    {% else %}
+    <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for pagenum in page_obj.paginator.page_range %}
+        {% if pagenum == page_obj.number %}
+        <li class="active"><span>{{ pagenum }}<span class="sr-only"></span></span></li>
+        {% else %}
+        <li><a href="?page={{pagenum}}">{{ pagenum }}</a></li>
+        {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <li><a href="?page={{page_obj.next_page_number}}">&raquo;</a></li>
+    {% else %}
+    <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+</ul>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script>$('#IDTooltip').tooltip()</script>
+<script>$('#FechaTooltip').tooltip()</script>
+<script>$('#DocumentoTooltip').tooltip()</script>
+<script>$('#NombreTooltip').tooltip()</script>
+<script>$('#ApellidoTooltip').tooltip()</script>
+{% endblock extra_js %}
